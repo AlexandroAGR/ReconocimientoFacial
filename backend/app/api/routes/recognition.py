@@ -4,6 +4,7 @@ from fastapi import (
     APIRouter,
     Depends,
     File,
+    Form,
     HTTPException,
     UploadFile
 )
@@ -12,9 +13,9 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.models.face_embedding_model import FaceEmbedding
 from app.models.persona_model import Persona
-from app.schemas.recognition_schema import EmbeddingResponse
+from app.schemas.recognition_schema import EmbeddingResponse, RecognitionResponse
 from app.services.face_service import face_service
-from app.services.recognition_service import reconocer_persona
+from app.services.recognition_service import DEFAULT_THRESHOLD, reconocer_persona
 
 
 router = APIRouter(
@@ -99,10 +100,17 @@ async def registrar_rostro(
     )
 
 @router.post(
-    "/reconocimiento"
+    "/reconocimiento",
+    response_model=RecognitionResponse
 )
 async def reconocer(
     file: UploadFile = File(...),
+    umbral: float = Form(
+        DEFAULT_THRESHOLD,
+        ge=0.0,
+        le=1.0,
+        description="Umbral de aceptación de la coincidencia (0-1)."
+    ),
     db: Session = Depends(get_db)
 ):
 
@@ -126,7 +134,8 @@ async def reconocer(
 
         resultado = reconocer_persona(
             db,
-            image_bytes
+            image_bytes,
+            threshold=umbral
         )
 
         return resultado

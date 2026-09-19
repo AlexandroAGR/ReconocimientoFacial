@@ -8,6 +8,7 @@ const [resultado, setResultado] =
 useState<RecognitionResult | null>(null);
 
 const [cargando, setCargando] = useState(false);
+const [umbral, setUmbral] = useState(0.75);
 
 const reconocer = async (image: string) => {
 try {
@@ -25,6 +26,11 @@ setResultado(null);
     "file",
     blob,
     "captura.jpg"
+  );
+
+  formData.append(
+    "umbral",
+    umbral.toString()
   );
 
   const response = await api.post<RecognitionResult>(
@@ -79,6 +85,21 @@ INTELIGENCIA ARTIFICIAL </span>
 
       <div className="camera-container">
         <CameraCapture onCapture={reconocer} />
+      </div>
+
+      <div className="threshold-field">
+        <label>
+          Umbral de aceptación
+          <strong>{umbral.toFixed(2)}</strong>
+        </label>
+        <input
+          type="range"
+          min={0.4}
+          max={0.95}
+          step={0.01}
+          value={umbral}
+          onChange={(e) => setUmbral(Number(e.target.value))}
+        />
       </div>
     </div>
 
