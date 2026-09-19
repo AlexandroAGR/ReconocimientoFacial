@@ -1,24 +1,64 @@
-import { useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+
 import Webcam from "react-webcam";
 
 interface CameraCaptureProps {
-  onCapture: (image: string) => void;
+  onCapture: (image: string) => Promise<void>;
+  autoCapture?: boolean;
+  intervalMs?: number;
 }
 
 export default function CameraCapture({
   onCapture,
+  autoCapture = true,
+  intervalMs = 2000,
 }: CameraCaptureProps) {
   const webcamRef = useRef<Webcam>(null);
 
-  const capturar = () => {
-    const image = webcamRef.current?.getScreenshot();
+  const isProcessingRef = useRef(false);
+
+  const capturar = useCallback(async () => {
+    if (isProcessingRef.current) {
+      return;
+    }
+
+    const image =
+      webcamRef.current?.getScreenshot();
 
     if (!image) {
       return;
     }
 
-    onCapture(image);
-  };
+    try {
+      isProcessingRef.current = true;
+
+      await onCapture(image);
+    } finally {
+      isProcessingRef.current = false;
+    }
+  }, [onCapture]);
+
+  useEffect(() => {
+    if (!autoCapture) {
+      return;
+    }
+
+    const intervalo = setInterval(() => {
+      void capturar();
+    }, intervalMs);
+
+    return () => {
+      clearInterval(intervalo);
+    };
+  }, [
+    autoCapture,
+    intervalMs,
+    capturar,
+  ]);
 
   return (
     <div>
@@ -33,9 +73,14 @@ export default function CameraCapture({
         }}
       />
 
-      <button onClick={capturar}>
-        Capturar rostro
-      </button>
+      {!autoCapture && (
+        <button
+          onClick={() => void capturar()}
+        >
+          Capturar rostro
+        </button>
+      )}
     </div>
   );
 }
+

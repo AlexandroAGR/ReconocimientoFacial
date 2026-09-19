@@ -4,78 +4,167 @@ import { api } from "../services/api";
 import type { RecognitionResult } from "../types/facial";
 
 export default function Reconocimiento() {
-  const [resultado, setResultado] =
-    useState<RecognitionResult | null>(null);
+const [resultado, setResultado] =
+useState<RecognitionResult | null>(null);
 
-  const [cargando, setCargando] = useState(false);
+const [cargando, setCargando] = useState(false);
 
-  const reconocer = async (image: string) => {
-    try {
-      setCargando(true);
-      setResultado(null);
+const reconocer = async (image: string) => {
+try {
+setCargando(true);
+setResultado(null);
 
-      const blob = await fetch(image).then((res) =>
-        res.blob()
-      );
 
-      const formData = new FormData();
+  const blob = await fetch(image).then((res) =>
+    res.blob()
+  );
 
-      formData.append(
-        "file",
-        blob,
-        "captura.jpg"
-      );
+  const formData = new FormData();
 
-      const response = await api.post<RecognitionResult>(
-        "/reconocimiento",
-        formData
-      );
+  formData.append(
+    "file",
+    blob,
+    "captura.jpg"
+  );
 
-      setResultado(response.data);
-    } catch (error) {
-      console.error(error);
-      alert("No se pudo realizar el reconocimiento");
-    } finally {
-      setCargando(false);
-    }
-  };
+  const response = await api.post<RecognitionResult>(
+    "/reconocimiento",
+    formData
+  );
 
-  return (
-    <div>
+  setResultado(response.data);
+} catch (error) {
+  console.error(error);
+  alert("No se pudo realizar el reconocimiento");
+} finally {
+  setCargando(false);
+}
+
+
+};
+
+return ( <div className="page"> <section className="page-heading"> <div> <span className="eyebrow">
+INTELIGENCIA ARTIFICIAL </span>
+
       <h1>Reconocimiento Facial</h1>
 
-      <CameraCapture onCapture={reconocer} />
+      <p>
+        Identificación facial en tiempo real.
+      </p>
+    </div>
 
-      {cargando && (
-        <p>Analizando rostro...</p>
-      )}
+    <div className="system-badge">
+      <span />
+      Cámara activa
+    </div>
+  </section>
 
-      {resultado && (
+  <div className="recognition-layout">
+    <div className="dashboard-card camera-card">
+      <div className="card-header">
         <div>
-          <h2>
-            {resultado.coincide
-              ? "Persona reconocida"
-              : "No se encontró coincidencia"}
-          </h2>
+          <span className="eyebrow">
+            CÁMARA
+          </span>
 
-          {resultado.coincide && (
-            <p>
-              Persona: {resultado.nombre}
-            </p>
-          )}
+          <h2>Captura en tiempo real</h2>
+        </div>
+
+        {cargando && (
+          <span className="processing-badge">
+            Analizando...
+          </span>
+        )}
+      </div>
+
+      <div className="camera-container">
+        <CameraCapture onCapture={reconocer} />
+      </div>
+    </div>
+
+    <div className="dashboard-card result-card">
+      <span className="eyebrow">
+        RESULTADO
+      </span>
+
+      {!resultado && !cargando && (
+        <div className="empty-result">
+          <div className="empty-icon">
+            ◎
+          </div>
+
+          <h2>Esperando rostro</h2>
 
           <p>
-            Similitud:{" "}
-            {resultado.similitud !== null
-              ? resultado.similitud.toFixed(4)
-              : "-"}
-          </p>
-
-          <p>
-            Umbral: {resultado.umbral}
+            Colócate frente a la cámara para
+            comenzar el reconocimiento.
           </p>
         </div>
       )}
+
+      {cargando && (
+        <div className="empty-result">
+          <div className="loading-spinner" />
+
+          <h2>Analizando rostro</h2>
+
+          <p>
+            InsightFace está procesando la captura.
+          </p>
+        </div>
+      )}
+
+      {resultado && !cargando && (
+        <div
+          className={
+            resultado.coincide
+              ? "recognition-result recognized"
+              : "recognition-result unknown"
+          }
+        >
+          <div className="result-icon">
+            {resultado.coincide ? "✓" : "?"}
+          </div>
+
+          <span className="result-label">
+            {resultado.coincide
+              ? "PERSONA RECONOCIDA"
+              : "SIN COINCIDENCIA"}
+          </span>
+
+          {resultado.coincide && (
+            <h2>{resultado.nombre}</h2>
+          )}
+
+          <div className="result-metrics">
+            <div>
+              <span>Similitud</span>
+
+              <strong>
+                {resultado.similitud !== null
+                  ? `${(
+                      resultado.similitud * 100
+                    ).toFixed(2)}%`
+                  : "-"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Umbral</span>
+
+              <strong>
+                {(
+                  resultado.umbral * 100
+                ).toFixed(2)}%
+              </strong>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  );
+  </div>
+</div>
+
+
+);
 }
