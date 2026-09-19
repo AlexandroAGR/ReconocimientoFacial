@@ -9,4 +9,6 @@ class ProbabilityStatsResponse(BaseModel):
     similitud_promedio: float
     similitud_maxima: float | None
     similitud_minima: float | None
+    probabilidad_calibrada_promedio: float | None
+    umbral_mas_usado: float | None
 

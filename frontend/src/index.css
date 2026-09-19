@@ -1359,3 +1359,275 @@ td {
   }
 }
 
+
+/* ---------------------------------------------------------
+   PROBABILIDADES: conceptos, calibración interactiva
+   y módulo de entrenamiento ML (agregado)
+   --------------------------------------------------------- */
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.concept-card {
+  padding: 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--surface-soft);
+}
+
+.concept-card span {
+  display: block;
+
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.concept-card p {
+  margin-top: 6px;
+
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.calibration-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+
+  margin-bottom: 18px;
+}
+
+.threshold-field {
+  margin-top: 18px;
+}
+
+.threshold-field label {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.threshold-field label strong {
+  color: var(--primary);
+}
+
+.threshold-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+}
+
+.simulator-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.simulator-row .form-group {
+  flex: 1;
+  margin-top: 0;
+}
+
+.simulator-row .secondary-button {
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.ml-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.ml-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.ml-form-grid .form-group {
+  margin-top: 16px;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+.toggle-option {
+  flex: 1;
+
+  padding: 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--surface-soft);
+  color: var(--text-soft);
+
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.toggle-option.active-yes {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.toggle-option.active-no {
+  border-color: var(--danger);
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--danger);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.metric-tile {
+  padding: 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--surface-soft);
+
+  text-align: center;
+}
+
+.metric-tile span {
+  display: block;
+
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.metric-tile strong {
+  display: block;
+
+  margin-top: 6px;
+
+  font-size: 20px;
+}
+
+.confusion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.confusion-cell {
+  padding: 14px;
+
+  border-radius: 10px;
+
+  text-align: center;
+}
+
+.confusion-cell span {
+  display: block;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.confusion-cell strong {
+  display: block;
+
+  margin-top: 6px;
+
+  font-size: 22px;
+}
+
+.confusion-cell.vp {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.confusion-cell.vn {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.confusion-cell.fp {
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--danger);
+}
+
+.confusion-cell.fn {
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--danger);
+}
+
+.training-status {
+  margin-top: 14px;
+
+  padding: 10px 12px;
+
+  border-radius: 9px;
+  border: 1px solid var(--border);
+
+  background: var(--surface-soft);
+  color: var(--text-soft);
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.training-status.warning {
+  border-color: var(--warning);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.training-count {
+  margin-top: 14px;
+
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1100px) {
+  .concept-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calibration-layout,
+  .ml-panel,
+  .ml-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid,
+  .confusion-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

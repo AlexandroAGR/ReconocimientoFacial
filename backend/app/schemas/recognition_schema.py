@@ -16,3 +16,5 @@ class RecognitionResponse(BaseModel):
     distancia: float | None
     umbral: float
     coincide: bool
+    probabilidad_calibrada: float | None
+    confianza: str | None

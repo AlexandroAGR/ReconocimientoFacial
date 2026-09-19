@@ -158,6 +158,26 @@ INTELIGENCIA ARTIFICIAL </span>
                 ).toFixed(2)}%
               </strong>
             </div>
+
+            <div>
+              <span>Probabilidad calibrada</span>
+
+              <strong>
+                {resultado.probabilidad_calibrada !== null
+                  ? `${(
+                      resultado.probabilidad_calibrada * 100
+                    ).toFixed(1)}%`
+                  : "-"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Confianza</span>
+
+              <strong>
+                {resultado.confianza ?? "-"}
+              </strong>
+            </div>
           </div>
         </div>
       )}
